@@ -1,4 +1,4 @@
-# UniversalControl client - Windows preview
+# UniversalControl client — Windows preview
 
 A generic Windows agent and installer for an **existing compatible UniversalControl controller**. This repository currently publishes the client and reusable client/owner utility libraries. It does not include a standalone controller installation, controller runtime, hosted control service or complete desktop engine. Do not treat this preview as a complete self-hosted-controller distribution.
 
