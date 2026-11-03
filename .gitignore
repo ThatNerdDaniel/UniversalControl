@@ -1,0 +1,10 @@
+node_modules/
+*.tgz
+.npm-cache/
+.env*
+.npmrc
+*.dpapi
+*.sqlite*
+*.pem
+*.key
+coverage/

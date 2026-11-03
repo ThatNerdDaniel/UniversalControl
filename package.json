@@ -1,0 +1,43 @@
+{
+  "name": "@thatnerddaniel/universalcontrol",
+  "version": "0.10.2",
+  "type": "module",
+  "bin": {
+    "universalcontrol": "bin/universalcontrol.mjs",
+    "universalcontrol-owner": "bin/universalcontrol-owner.mjs"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "src",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "PROVENANCE.md"
+  ],
+  "description": "Generic Windows client preview for an existing compatible UniversalControl controller",
+  "author": "ThatNerdDaniel",
+  "license": "MIT",
+  "os": [
+    "win32"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThatNerdDaniel/UniversalControl.git"
+  },
+  "homepage": "https://github.com/ThatNerdDaniel/UniversalControl#readme",
+  "bugs": {
+    "url": "https://github.com/ThatNerdDaniel/UniversalControl/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "preview",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

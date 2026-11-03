@@ -1,0 +1,9 @@
+import {bounded} from './supervisor.mjs';
+export class DrainGate {
+ constructor({busy=()=>false,interactive=()=>true,requireInteractive=true}={}){this.accepting=true;this.inflight=0;this.waiters=[];this.busy=busy;this.interactive=interactive;this.requireInteractive=requireInteractive;this.closed=false;this.generation=0;}
+ async call(action){if(!this.accepting||this.closed)throw Error('UPDATING_NOT_EXECUTED');this.inflight++;try{return await action();}finally{this.inflight--;if(!this.inflight){for(const r of this.waiters.splice(0))r();}}}
+ async drain(timeout=30000){if(this.closed)return {drained:false,reason:'CLOSED'};const generation=++this.generation;let waiter;this.accepting=false;try{if(this.inflight)await bounded(new Promise(r=>{waiter=r;this.waiters.push(r);}),timeout,'Drain timeout');if(this.closed||generation!==this.generation)return {drained:false,reason:'CANCELLED'};const busy=await this.busy();if(generation!==this.generation)return {drained:false,reason:'CANCELLED'};if(busy){this.accepting=true;return {drained:false,reason:'BUSY'};}const interactive=!this.requireInteractive||await this.interactive();if(generation!==this.generation||this.closed)return {drained:false,reason:'CANCELLED'};if(!interactive){this.accepting=true;return {drained:false,reason:'LOCKED_OR_UNKNOWN'};}return {drained:true};}catch{if(!this.closed&&generation===this.generation)this.accepting=true;return {drained:false,reason:'IN_FLIGHT_TIMEOUT'};}finally{if(waiter)this.waiters=this.waiters.filter(w=>w!==waiter);}}
+ resume(){if(!this.closed){this.generation++;this.accepting=true;}}
+ close(){this.generation++;this.closed=true;this.accepting=false;}
+}
+export function coreIsBusy(core){return core.job?.status==='running'||[...core.processes.sessions.values()].some(s=>s.child&&!s.lifecycle?.closed);}
